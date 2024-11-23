@@ -1,3 +1,4 @@
+#UPDATE LOG: 8H51 - 23/11/2024
 dirty_data <- read.csv("D:/dirty_data (1).csv") #Doc du lieu
 str(dirty_data)
 #Chuyen cac bien can phan tich vao new_data
@@ -171,58 +172,11 @@ colSums(is.na(new_data_5))
 new_data_5<-na.omit(new_data_5)
 boxplot(order_total~is_expedited_delivery ,new_data_5,col=c(2,3))
 #Ve do thi Scatter/plot
-par(mfrow=c(1,2))
-plot(order_total~order_price,main="Order_total & Order_price",col="blue",data=new_data)
-rm.out <- function(x, na.rm = TRUE,...){
-  qnt <- quantile(x,probs=c(.25,.75),na.rm = na.rm, ...)
-  H <- 1.5* IQR (x,na.rm =na.rm)
-  y <- x
-  y[x<(qnt[1]-H)] <- NA
-  y[x>(qnt[2]+H)] <-NA
-  y
-}
-new_data$Coupon_discount<-rm.out(new_data$Coupon_discount)
-new_data<-na.omit(new_data)
-plot(order_total~order_price,main="Order_total & Order_price",col="blue",data=new_data)
-#Ve Scatter/plot nearest
-par(mfrow=c(1,2))
-plot(order_total~distance_to_nearest_warehouse,main="Order_total & Distance_to_nearest_warehouse",col="green",data=new_data)
-qnt <- quantile(x,probs=c(.25,.75),na.rm = na.rm, ...)
-  H <- 1.5* IQR (x,na.rm =na.rm)
-  y <- x
-  y[x<(qnt[1]-H)] <- NA
-  y[x>(qnt[2]+H)] <-NA
-  y
-}
-new_data$Distance_to_nearest_warehouse<-rm.out(new_data$Distance_to_nearest_warehouse)
-new_data<-na.omit(new_data)
-plot(order_total~distance_to_nearest_warehouse,main="Order_total & Distance_to_nearest_warehouse",col="green",data=new_data)
-#Ve do thi cho Delivery_charges
-par(mfrow=c(1,2))
-plot(order_total~delivery_charges,main="Order_total & Delivery_charges",col="darkred",data=new_data)
-qnt <- quantile(x,probs=c(.25,.75),na.rm = na.rm, ...)
-H <- 1.5* IQR (x,na.rm =na.rm)
-y <- x
-y[x<(qnt[1]-H)] <- NA
-y[x>(qnt[2]+H)] <-NA
-y
-}
-new_data$delivery_charges<-rm.out(new_data$delivery_charges)
-new_data<-na.omit(new_data)
-plot(order_total~delivery_charges,main="Order_total & Delivery_charges",col="darkred",data=new_data)
-#Ve do thi cho coupondiscount
-par(mfrow=c(1,2))
-plot(order_total~coupon_discount,main="Order_total & coupon_discount",col="darkred",data=new_data)
-qnt <- quantile(x,probs=c(.25,.75),na.rm = na.rm, ...)
-H <- 1.5* IQR (x,na.rm =na.rm)
-y <- x
-y[x<(qnt[1]-H)] <- NA
-y[x>(qnt[2]+H)] <-NA
-y
-}
-new_data$coupon_discount<-rm.out(new_data$coupon_discount)
-new_data<-na.omit(new_data)
-plot(order_total~coupon_discount,main="Order_total & coupon_discount",col="darkred",data=new_data)
+par(mfrow=c(1,4))
+plot(order_total~order_price,main="order_total & order_price",col="blue",data=new_data)
+plot(order_total~delivery_charges,main="order_total & Delivery_charges",col="darkred",data=new_data)
+plot(order_total~distance_to_nearest_warehouse,main="order_total & distance_to_nearest_warehouse", col="green",data=new_data)
+plot(order_total~coupon_discount,main="order_total & discount_discount",col="brown",data=new_data)
 
 
 
@@ -233,6 +187,6 @@ plot(order_total~coupon_discount,main="Order_total & coupon_discount",col="darkr
 model_1<-lm(order_total~.,data=new_data)
 best_model<-step(model_1)
 summary(best_model)
-cor_maxtrix <- cor(new_data[, c("order_total", "customer_lat", "customer_long", "distance_to_nearest_warehouse")])
+cor_maxtrix <- cor(new_data[, c("order_total", ,"order_price","delivery_chagres,coupon_discount")])
 library(corrplot)
 corrplot(cor_maxtrix, method = "number")
