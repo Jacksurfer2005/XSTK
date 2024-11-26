@@ -1,4 +1,3 @@
-#UPDATE LOG: 8H51 - 23/11/2024
 dirty_data <- read.csv("D:/dirty_data (1).csv") #Doc du lieu
 str(dirty_data)
 #Chuyen cac bien can phan tich vao new_data
