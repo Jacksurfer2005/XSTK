@@ -177,15 +177,49 @@ plot(order_total~delivery_charges,main="order_total & Delivery_charges",col="dar
 plot(order_total~distance_to_nearest_warehouse,main="order_total & distance_to_nearest_warehouse", col="green",data=new_data)
 plot(order_total~coupon_discount,main="order_total & discount_discount",col="brown",data=new_data)
 
+Spring_data_2 <- subset(new_data_2, season == "Spring")
+Summer_data_2 <- subset(new_data_2, season == "Summer")
+Autumn_data_2 <- subset(new_data_2, season == "Autumn")
+Winter_data_2 <- subset(new_data_2, season == "Winter")
 
+qqnorm(Spring_data_2$order_total)
+qqline(Spring_data_2$order_total)
+shapiro.test(Spring_data_2$order_total)
 
+qqnorm(Summer_data_2$order_total)
+qqline(Summer_data_2$order_total)
+shapiro.test(Summer_data_2$order_total)
 
+qqnorm(Autumn_data_2$order_total)
+qqline(Autumn_data_2$order_total)
+shapiro.test(Autumn_data_2$order_total)
 
+qqnorm(Winter_data_2$order_total)
+qqline(Winter_data_2$order_total)
+shapiro.test(Winter_data_2$order_total)
 
+library(car)
+leveneTest(order_total ~as.factor(season), data = new_data_2)
 
-model_1<-lm(order_total~.,data=new_data)
+anova_model <- aov(order_total~season, data = new_data_2)
+summary(anova_model)
+
+new_data$order_total<-rm.out(new_data$order_total)
+new_data$delivery_charges<-rm.out(new_data$delivery_charges)
+new_data$order_price<-rm.out(new_data$order_price)
+new_data$distance_to_nearest_warehouse <-rm.out(new_data$distance_to_nearest_warehouse )
+new_data$coupon_discount  <-rm.out(new_data$coupon_discount  )
+new_data<-na.omit(new_data)
 best_model<-step(model_1)
 summary(best_model)
-cor_maxtrix <- cor(new_data[, c("order_total", ,"order_price","delivery_chagres,coupon_discount")])
-library(corrplot)
-corrplot(cor_maxtrix, method = "number")
+
+model_1<-lm(order_total~coupon_discount+order_price+season, data=new_data)
+summary(model_1)
+
+model_2<-lm(order_total~coupon_discount + order_price, data=new_data)
+summary(model_2)
+
+anova(model_1, model_2)
+
+par(mfrow = c(2, 2))
+plot(model_2)
