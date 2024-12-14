@@ -231,3 +231,7 @@ anova(model_1, model_2)
 
 par(mfrow = c(2, 2))
 plot(model_2)
+
+cor_matrix <- cor(new_DF2[,c("order_price", "delivery_charges", "order_total","coupon_discount", "distance_to_nearest_warehouse")])
+library(corrplot)
+corrplot(cor_matrix, order="hclust", method="color", addCoef.col = "red")
