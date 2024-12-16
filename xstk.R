@@ -1,8 +1,8 @@
-dirty_data <- read.csv("D:/dirty_data (1).csv") #Doc du lieu
+dirty_data <- read.csv("D:/BACH KHOA/XSTK/BTL/dirty_data.csv") #Doc du lieu
 str(dirty_data)
 #Chuyen cac bien can phan tich vao new_data
 new_data <- dirty_data[,c("order_total","order_price","delivery_charges","coupon_discount","season",
-                          "is_expedited_delivery","is_happy_customer","distance_to_nearest_warehouse","nearest_warehouse","customer_lat","customer_long")]
+    "is_expedited_delivery","is_happy_customer","distance_to_nearest_warehouse","nearest_warehouse","customer_lat","customer_long")]
 head(new_data ,10)
 #Kiem tra du lieu khuyet
 apply(is.na(new_data), 2, which)
@@ -25,7 +25,7 @@ new_data$nearest_warehouse[new_data$nearest_warehouse == 'thompson'] = 'Thompson
 new_data$nearest_warehouse[new_data$nearest_warehouse == 'nickolson'] = 'Nickolson'
 unique(new_data$nearest_warehouse)
 
-new_data <- dirty_data[,c("order_total","order_price","delivery_charges","coupon_discount","season",
+new_data <- new_data[,c("order_total","order_price","delivery_charges","coupon_discount","season",
                           "is_expedited_delivery","is_happy_customer","distance_to_nearest_warehouse","nearest_warehouse","customer_lat","customer_long")]
 head(new_data ,10)
 colSums(is.na(new_data))
@@ -127,44 +127,44 @@ new_data_3<-na.omit(new_data_3)
 boxplot(order_total~nearest_warehouse ,new_data_3,col=c(2,3,5))
 
 #Ve do thi boxplot 
- boxplot(order_total~is_happy_customer,new_data)
+boxplot(order_total~is_happy_customer,new_data)
 #Xu li ngoai lai
-  rm.out <- function(x, na.rm = TRUE,...){
-    qnt <- quantile(x,probs=c(.25,.75),na.rm = na.rm, ...)
-    H <- 1.5* IQR (x,na.rm =na.rm)
-    y <- x
-    y[x<(qnt[1]-H)] <- NA
-    y[x>(qnt[2]+H)] <-NA
-    y
-  }
-  True_data =subset(new_data,new_data$is_happy_customer=="True")
-  True_data$order_total =rm.out(True_data$order_total)
-  
-  False_data =subset(new_data,new_data$is_happy_customer=="False")
-  False_data$order_total =rm.out(False_data$order_total)
-  
-  new_data_4 <- rbind(True_data,False_data)
-  colSums(is.na(new_data_4))
-  new_data_4<-na.omit(new_data_4) 
-  boxplot(order_total~is_happy_customer ,new_data_4,col=c(2,3))
-  
+rm.out <- function(x, na.rm = TRUE,...){
+  qnt <- quantile(x,probs=c(.25,.75),na.rm = na.rm, ...)
+  H <- 1.5* IQR (x,na.rm =na.rm)
+  y <- x
+  y[x<(qnt[1]-H)] <- NA
+  y[x>(qnt[2]+H)] <-NA
+  y
+}
+True_data =subset(new_data,new_data$is_happy_customer=="True")
+True_data$order_total =rm.out(True_data$order_total)
+
+False_data =subset(new_data,new_data$is_happy_customer=="False")
+False_data$order_total =rm.out(False_data$order_total)
+
+new_data_4 <- rbind(True_data,False_data)
+colSums(is.na(new_data_4))
+new_data_4<-na.omit(new_data_4) 
+boxplot(order_total~is_happy_customer ,new_data_4,col=c(2,3))
+
 #Ve do thi boxplot
-  par(mfrow=c(1,2))
-  
-  boxplot(order_total~is_expedited_delivery,new_data)
-  rm.out <- function(x, na.rm = TRUE,...){
-    qnt <- quantile(x,probs=c(.25,.75),na.rm = na.rm, ...)
-    H <- 1.5* IQR (x,na.rm =na.rm)
-    y <- x
-    y[x<(qnt[1]-H)] <- NA
-    y[x>(qnt[2]+H)] <-NA
-    y
-  }
-  True_data =subset(new_data,new_data$is_expedited_delivery=="True")
-  True_data$order_total =rm.out(True_data$order_total)
-  
-  False_data =subset(new_data,new_data$is_expedited_delivery=="False")
-  False_data$order_total =rm.out(False_data$order_total)
+par(mfrow=c(1,2))
+
+boxplot(order_total~is_expedited_delivery,new_data)
+rm.out <- function(x, na.rm = TRUE,...){
+  qnt <- quantile(x,probs=c(.25,.75),na.rm = na.rm, ...)
+  H <- 1.5* IQR (x,na.rm =na.rm)
+  y <- x
+  y[x<(qnt[1]-H)] <- NA
+  y[x>(qnt[2]+H)] <-NA
+  y
+}
+True_data =subset(new_data,new_data$is_expedited_delivery=="True")
+True_data$order_total =rm.out(True_data$order_total)
+
+False_data =subset(new_data,new_data$is_expedited_delivery=="False")
+False_data$order_total =rm.out(False_data$order_total)
 
 new_data_5 <- rbind(True_data,False_data)
 colSums(is.na(new_data_5))
@@ -176,62 +176,52 @@ plot(order_total~order_price,main="order_total & order_price",col="blue",data=ne
 plot(order_total~delivery_charges,main="order_total & Delivery_charges",col="darkred",data=new_data)
 plot(order_total~distance_to_nearest_warehouse,main="order_total & distance_to_nearest_warehouse", col="green",data=new_data)
 plot(order_total~coupon_discount,main="order_total & discount_discount",col="brown",data=new_data)
-
+#Tach du lieu theo mua
 Spring_data_2 <- subset(new_data_2, season == "Spring")
 Summer_data_2 <- subset(new_data_2, season == "Summer")
 Autumn_data_2 <- subset(new_data_2, season == "Autumn")
 Winter_data_2 <- subset(new_data_2, season == "Winter")
-
+#Ve do thi QQ va thuc hien Shapiro test cho mua xuan 
 qqnorm(Spring_data_2$order_total)
 qqline(Spring_data_2$order_total)
 shapiro.test(Spring_data_2$order_total)
-
+#Ve do thi QQ va thuc hien Shapiro test cho mua he
 qqnorm(Summer_data_2$order_total)
 qqline(Summer_data_2$order_total)
 shapiro.test(Summer_data_2$order_total)
-
+#Ve do thi QQ va thuc hien Shapiro test cho mua thu 
 qqnorm(Autumn_data_2$order_total)
 qqline(Autumn_data_2$order_total)
 shapiro.test(Autumn_data_2$order_total)
-
+#Ve do thi QQ va thuc hien Shapiro test cho mua dong 
 qqnorm(Winter_data_2$order_total)
 qqline(Winter_data_2$order_total)
 shapiro.test(Winter_data_2$order_total)
-
+#Kiem dinh tinh dong nhat cua phuong sai
 library(car)
 leveneTest(order_total ~as.factor(season), data = new_data_2)
-
+#So sanh tong chi phi dat hang trung binh o cac mua bang Anova
 anova_model <- aov(order_total~season, data = new_data_2)
 summary(anova_model)
+#Kiem tra du lieu co tuan theo phan phoi chuan hay khong
+print(shapiro.test(new_data$order_total))
+print(shapiro.test(new_data$order_price))
+print(shapiro.test(new_data$delivery_charges))
+print(shapiro.test(new_data$coupon_discount))
+print(shapiro.test(new_data$distance_to_nearest_warehouse))
 
-print(shapiro.test(fix_Data1$order_total))
-print(shapiro.test(fix_Data1$order_price))
-print(shapiro.test(fix_Data1$delivery_charges))
-print(shapiro.test(fix_Data1$coupon_discount))
-print(shapiro.test(fix_Data1$distance_to_nearest_warehouse))
-print(shapiro.test(fix_Data1$customer_long))
-print(shapiro.test(fix_Data1$customer_lat))
-
-new_data$order_total<-rm.out(new_data$order_total)
-new_data$delivery_charges<-rm.out(new_data$delivery_charges)
-new_data$order_price<-rm.out(new_data$order_price)
-new_data$distance_to_nearest_warehouse <-rm.out(new_data$distance_to_nearest_warehouse )
-new_data$coupon_discount  <-rm.out(new_data$coupon_discount  )
-new_data<-na.omit(new_data)
-best_model<-step(model_1)
-summary(best_model)
-
-model_1<-lm(order_total~coupon_discount+order_price+season, data=new_data)
+#Hoi quy da bien mo hinh 1
+model_1<-lm(order_total~coupon_discount+order_price+season+nearest_warehouse+is_expedited_delivery+is_happy_customer, data=new_data)
 summary(model_1)
-
+#Hoi quy da bien mo hinh 2
 model_2<-lm(order_total~coupon_discount + order_price, data=new_data)
 summary(model_2)
-
+#So sanh 2 model bang phuong phap Anova 
 anova(model_1, model_2)
-
+#Ve mo hinh thang du
 par(mfrow = c(2, 2))
 plot(model_2)
-
-cor_matrix <- cor(new_DF2[,c("order_price", "delivery_charges", "order_total","coupon_discount", "distance_to_nearest_warehouse")])
+#Ma tran tuong quan
+cor_matrix <- cor(new_data[,c("order_price", "delivery_charges", "order_total","coupon_discount", "distance_to_nearest_warehouse")])
 library(corrplot)
 corrplot(cor_matrix, order="hclust", method="color", addCoef.col = "red")
